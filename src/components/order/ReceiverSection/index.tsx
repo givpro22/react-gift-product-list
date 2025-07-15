@@ -1,5 +1,4 @@
 import { whiteSectionStyle } from "@/styles/CommonStyles";
-import theme from "@/styles/theme";
 import { sectionTitleStyle } from "./ReceiverSelectModal/styles";
 import {
   addButtonStyle,
@@ -31,7 +30,7 @@ function ReceiverSection() {
 
   return (
     <>
-      <div css={whiteSectionStyle(theme)}>
+      <div css={whiteSectionStyle()}>
         <div css={headerStyle}>
           <h3 css={sectionTitleStyle}>받는 사람</h3>
           <div css={addButtonStyle} onClick={openModal}>

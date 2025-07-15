@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import type { Theme } from "@emotion/react";
 import type theme from "@/styles/theme";
 
 type Props = {
@@ -21,7 +20,7 @@ const StyledDiv = styled.div<{
 }>(({ spacingKey, colorKey, theme }) => ({
   width: "100%",
   height: theme.spacing[spacingKey],
-  backgroundColor: getColor(colorKey, theme),
+  backgroundColor: getColor(colorKey),
 }));
 
 type TransparentColorKey = "transparent";
@@ -29,7 +28,7 @@ type TransparentColorKey = "transparent";
 type ColorKeys = TransparentColorKey;
 type SpacingKeys = keyof typeof theme.spacing;
 
-const getColor = (colorKey: ColorKeys, theme: Theme) => {
+const getColor = (colorKey: ColorKeys) => {
   if (colorKey === "transparent") {
     return "transparent";
   }

@@ -1,6 +1,5 @@
 import { cardData } from "@/mocks/orderCardData";
 import { whiteSectionStyle } from "@/styles/CommonStyles";
-import theme from "@/styles/theme";
 import { useState, useEffect } from "react";
 import {
   cardListStyle,
@@ -27,7 +26,7 @@ const GiftMessageSection = ({
   }, [selectedCard, setValue]);
 
   return (
-    <div css={whiteSectionStyle(theme)}>
+    <div css={whiteSectionStyle()}>
       <div css={cardListStyle}>
         {cardData.map((card) => (
           <img

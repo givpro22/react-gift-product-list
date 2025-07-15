@@ -1,7 +1,6 @@
 import { useParams } from "react-router-dom";
 import { mockProduct } from "@/mocks/productData";
 import { whiteSectionStyle } from "@/styles/CommonStyles";
-import theme from "@/styles/theme";
 import {
   titleStyle,
   cardStyle,
@@ -28,7 +27,7 @@ function ProductInfoSection() {
   }, [product.price.sellingPrice]);
 
   return (
-    <div css={whiteSectionStyle(theme)}>
+    <div css={whiteSectionStyle()}>
       <h3 css={titleStyle}>상품 정보</h3>
       <div css={cardStyle}>
         <img src={product.imageURL} alt={product.name} css={imageStyle} />

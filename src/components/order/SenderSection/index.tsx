@@ -1,11 +1,10 @@
 import { whiteSectionStyle } from "@/styles/CommonStyles";
-import theme from "@/styles/theme";
 import { sectionTitleStyle, inputStyle, infoTextStyle } from "./styles";
 import type { SenderSectionProps } from "../type";
 
 function SenderSection({ register, errors }: SenderSectionProps) {
   return (
-    <div css={whiteSectionStyle(theme)}>
+    <div css={whiteSectionStyle()}>
       <h3 css={sectionTitleStyle}>보내는 사람</h3>
       <input
         type="text"
