@@ -1,37 +1,35 @@
 import React, { createContext, useContext, useState } from "react";
 
 type OrderContextType = {
-  orderFormState: {
-    quantity: number;
-    totalPrice: number;
-    productPrice: number;
-    productName: string;
-  };
-  setOrderFormState: React.Dispatch<
-    React.SetStateAction<{
-      quantity: number;
-      totalPrice: number;
-      productPrice: number;
-      productName: string;
-    }>
-  >;
+  quantity: number;
+  setQuantity: (q: number) => void;
+  totalPrice: number;
+  setTotalPrice: (p: number) => void;
+  productPrice: number;
+  setProductPrice: (p: number) => void;
+  productName: string;
+  setProductName: (name: string) => void;
 };
 
 const OrderContext = createContext<OrderContextType | null>(null);
 
 export const OrderProvider = ({ children }: { children: React.ReactNode }) => {
-  const [orderFormState, setOrderFormState] = useState({
-    quantity: 1,
-    totalPrice: 0,
-    productPrice: 0,
-    productName: "",
-  });
+  const [quantity, setQuantity] = useState(1);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [productPrice, setProductPrice] = useState(0);
+  const [productName, setProductName] = useState("");
 
   return (
     <OrderContext.Provider
       value={{
-        orderFormState,
-        setOrderFormState,
+        quantity,
+        setQuantity,
+        totalPrice,
+        setTotalPrice,
+        productPrice,
+        setProductPrice,
+        productName,
+        setProductName,
       }}
     >
       {children}
