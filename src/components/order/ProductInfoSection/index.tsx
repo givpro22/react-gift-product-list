@@ -19,12 +19,14 @@ function ProductInfoSection() {
 
   const { setProductPrice, setProductName } = useOrder();
 
-  if (!product) return null;
-
   useEffect(() => {
-    setProductPrice(product.price.sellingPrice);
-    setProductName(product.name);
-  }, [product.price.sellingPrice]);
+    if (product) {
+      setProductPrice(product.price.sellingPrice);
+      setProductName(product.name);
+    }
+  }, [product, setProductName, setProductPrice]);
+
+  if (!product) return null;
 
   return (
     <div css={whiteSectionStyle()}>

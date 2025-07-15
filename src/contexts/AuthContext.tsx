@@ -1,4 +1,10 @@
-import { createContext, useContext, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useMemo,
+  useCallback,
+} from "react";
 import type { ReactNode } from "react";
 
 type AuthContextType = {
@@ -14,17 +20,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<string | null>(() => {
     return sessionStorage.getItem("user");
   });
-  const login = (username: string) => {
+
+  const login = useCallback((username: string) => {
     sessionStorage.setItem("user", username);
     setUser(username);
-  };
-  const logout = () => {
+  }, []);
+
+  const logout = useCallback(() => {
     sessionStorage.removeItem("user");
     setUser(null);
-  };
+  }, []);
 
-  const username = user ? user.split("@")[0] : null;
-  const value = { user, username, login, logout };
+  const value = useMemo(() => {
+    const username = user ? user.split("@")[0] : null;
+    return { user, username, login, logout };
+  }, [user, login, logout]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
