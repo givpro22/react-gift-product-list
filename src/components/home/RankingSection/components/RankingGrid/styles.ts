@@ -40,3 +40,22 @@ export const imageStyle = css`
 export const nameStyle = (theme: Theme) => css`
   font-size: ${theme.fontSizes.label1Regular};
 `;
+
+export const loadingContainerStyle = (theme: Theme) => css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px; /* 필요에 따라 조정 */
+  font-size: 1.2rem;
+  color: ${theme.colors.brown}; /* 또는 색상 조정 */
+`;
+
+export const emptyResultsStyle = (theme: Theme) => css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px; /* 필요에 따라 조정 */
+  font-size: 1.2rem;
+  color: ${theme.colors.brown}; /* 또는 색상 조정 */
+  text-align: center;
+`;

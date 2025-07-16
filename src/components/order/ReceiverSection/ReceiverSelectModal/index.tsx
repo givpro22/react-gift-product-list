@@ -10,7 +10,7 @@ import {
 import { useOrder } from "@/contexts/OrderContext";
 
 import { useFormContext } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ModalLayout from "@/components/layout/ModalLayout";
 import ReceiverForm from "./ReceiverForm";
 
@@ -25,15 +25,12 @@ function ReceiverSelectModal({ onClose }: { onClose: () => void }) {
     receivers: Receiver[];
   }>();
 
-  const [localReceivers, setLocalReceivers] = useState<Receiver[]>([]);
+  const [localReceivers, setLocalReceivers] = useState<Receiver[]>(
+    () => getValues("receivers") || []
+  );
   const [showValidation, setShowValidation] = useState(false);
 
   const { setQuantity, setTotalPrice, productPrice } = useOrder();
-
-  useEffect(() => {
-    const currentReceivers = getValues("receivers") || [];
-    setLocalReceivers(currentReceivers);
-  }, [getValues]);
 
   const handleAddClick = () => {
     if (localReceivers.length < 10) {

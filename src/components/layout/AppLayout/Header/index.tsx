@@ -6,7 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 export default function Header() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const handleBack = () => {
+  const handleClickBackButton = () => {
     if (window.history.length > 1) {
       navigate(-1);
     } else {
@@ -16,7 +16,7 @@ export default function Header() {
 
   return (
     <header css={headerWrapper()}>
-      <button onClick={handleBack} css={backButtonStyle}>
+      <button onClick={handleClickBackButton} css={backButtonStyle}>
         <FiChevronLeft size={24} />
       </button>
       <h1 css={titleStyle()}>선물하기</h1>

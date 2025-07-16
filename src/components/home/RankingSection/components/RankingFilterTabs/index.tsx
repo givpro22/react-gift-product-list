@@ -1,6 +1,6 @@
 import { useTheme } from "@emotion/react";
 import { useSearchParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { tabsWrapper, tabItemStyle } from "./styles";
 
 const FILTER_LABELS = ["전체", "여성", "남성", "청소년이"] as const;
@@ -16,20 +16,27 @@ export default function RankingFilterTabs() {
   );
   const selected = isValid ? rawParam : FILTER_OPTIONS[0];
 
+  const updateMainParam = useCallback(
+    (label: string) => {
+      const newParams = new URLSearchParams(searchParams);
+      newParams.set("main", label);
+      setSearchParams(newParams);
+    },
+    [searchParams, setSearchParams]
+  );
+
   useEffect(() => {
     const current = searchParams.get("main");
-    const isCurrentValid = FILTER_OPTIONS.includes(current as any);
+    const isCurrentValid =
+      current !== null &&
+      FILTER_OPTIONS.includes(current as (typeof FILTER_OPTIONS)[number]);
     if (!isCurrentValid && current !== FILTER_OPTIONS[0]) {
-      const newParams = new URLSearchParams(searchParams.toString());
-      newParams.set("main", FILTER_OPTIONS[0]);
-      setSearchParams(newParams);
+      updateMainParam(FILTER_OPTIONS[0]);
     }
-  }, [rawParam]);
+  }, [searchParams, updateMainParam]);
 
-  const handleClick = (label: string) => {
-    const newParams = new URLSearchParams(searchParams);
-    newParams.set("main", label);
-    setSearchParams(newParams);
+  const handleClickFilterOption = (label: string) => {
+    updateMainParam(label);
   };
 
   return (
@@ -38,7 +45,7 @@ export default function RankingFilterTabs() {
         <div
           key={label}
           css={tabItemStyle(theme, label === selected)}
-          onClick={() => handleClick(label)}
+          onClick={() => handleClickFilterOption(label)}
         >
           {label}
         </div>

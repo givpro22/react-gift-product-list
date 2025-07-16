@@ -1,5 +1,5 @@
+import { useEffect, useState } from "react";
 import { useTheme } from "@emotion/react";
-import { categoryData } from "@/mocks/categoryData";
 import {
   titleStyle,
   gridStyle,
@@ -8,15 +8,37 @@ import {
   nameStyle,
 } from "./styles";
 import { whiteSectionStyle } from "@/styles/CommonStyles";
+import { fetchThemes, type ThemProp } from "@/api/themes";
+import LoadingPage from "@/pages/LoadingPage";
 
 export default function CategorySection() {
   const theme = useTheme();
+  const [themes, setThemes] = useState<ThemProp[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadThemes = async () => {
+      try {
+        const data = await fetchThemes();
+        setThemes(data);
+      } catch {
+        setError("불러오는 데 실패했습니다.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadThemes();
+  }, []);
+
+  if (loading) return <LoadingPage css={whiteSectionStyle()} />;
+  if (error || themes.length === 0) return null;
 
   return (
     <div css={whiteSectionStyle()}>
       <h2 css={titleStyle(theme)}>선물 테마</h2>
       <div css={gridStyle}>
-        {categoryData.map((item) => (
+        {themes.map((item) => (
           <div key={item.themeId} css={itemStyle}>
             <img src={item.image} alt={item.name} css={imageStyle} />
             <span css={nameStyle(theme)}>{item.name}</span>
