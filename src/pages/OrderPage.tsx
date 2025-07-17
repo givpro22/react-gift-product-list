@@ -6,17 +6,22 @@ import ReceiverSection from "@/components/order/ReceiverSection";
 import OrderSubmitBar from "@/components/order/OrderSubmitBar";
 import { FormProvider, useForm } from "react-hook-form";
 import type { FormValues } from "@/components/order/type";
-import { useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useOrder } from "@/contexts/OrderContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { createOrder } from "@/api/order";
+import { cardData } from "@/mocks/orderCardData";
 
 function OrderPage() {
   const formRef = useRef<HTMLFormElement>(null);
   const navigate = useNavigate();
+  const params = useParams();
   const { user } = useAuth();
-
   const { productName, quantity } = useOrder();
+  const [selectedCardId, setSelectedCardId] = useState<string>(
+    String(cardData[0].id)
+  );
   const methods = useForm<FormValues>({
     mode: "onSubmit",
     defaultValues: {
@@ -31,15 +36,32 @@ function OrderPage() {
     handleSubmit,
     formState: { errors },
   } = methods;
-  const onSubmit = (data: FormValues) => {
-    alert(
-      `주문이 완료되었습니다.\n` +
-        `상품명: ${productName}\n` +
-        `구매 수량: ${quantity}\n` +
-        `발신자 이름: ${data.sender}\n` +
-        `메시지: ${data.message}`
-    );
-    navigate("/");
+  const onSubmit = async (data: FormValues) => {
+    try {
+      await createOrder({
+        productId: Number(params.productId),
+        message: data.message,
+        messageCardId: selectedCardId,
+        ordererName: data.sender,
+        receivers: data.receivers.map((r) => ({
+          name: r.name,
+          phoneNumber: r.phone,
+          quantity: r.quantity,
+        })),
+      });
+      alert(
+        `주문이 완료되었습니다.\n` +
+          `상품명: ${productName}\n` +
+          `구매 수량: ${quantity}\n` +
+          `발신자 이름: ${data.sender}\n` +
+          `메시지: ${data.message}`
+      );
+      navigate("/");
+    } catch (error) {
+      if (error.response?.status === 401) {
+        navigate("/login");
+      }
+    }
   };
 
   return (
@@ -49,6 +71,8 @@ function OrderPage() {
           register={register}
           errors={errors}
           setValue={setValue}
+          selectedCardId={selectedCardId}
+          setSelectedCardId={setSelectedCardId}
         />
         <HorizontalSpacing size="spacing3" />
         <SenderSection register={register} errors={errors} />
