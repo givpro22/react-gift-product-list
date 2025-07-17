@@ -9,16 +9,19 @@ import type { FormValues } from "@/components/order/type";
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useOrder } from "@/contexts/OrderContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 function OrderPage() {
   const formRef = useRef<HTMLFormElement>(null);
   const navigate = useNavigate();
+  const { user } = useAuth();
+
   const { productName, quantity } = useOrder();
   const methods = useForm<FormValues>({
     mode: "onSubmit",
     defaultValues: {
       message: "",
-      sender: "",
+      sender: user?.name || "",
       receivers: [{ name: "", phone: "", quantity: 1 }],
     },
   });
