@@ -12,13 +12,20 @@ export default function useLoginFormValidation() {
   const [password, setPassword] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [isPasswordValid, setIsPasswordValid] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const isFormValid = isEmailValid && isPasswordValid;
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     const from = location.state?.from || "/";
-    login(email, password);
-    navigate(from, { replace: true });
+    try {
+      setError(null);
+      await login(email, password);
+      navigate(from, { replace: true });
+    } catch {
+      const message = "로그인에 실패했습니다.";
+      setError(message);
+    }
   };
 
   return {
@@ -29,6 +36,8 @@ export default function useLoginFormValidation() {
     isFormValid,
     setIsEmailValid,
     setIsPasswordValid,
+    error,
+    setError,
     handleLogin,
   };
 }
