@@ -12,6 +12,7 @@ import { useOrder } from "@/contexts/OrderContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { createOrder } from "@/api/order";
 import { cardData } from "@/mocks/orderCardData";
+import type { AxiosError } from "axios";
 
 function OrderPage() {
   const formRef = useRef<HTMLFormElement>(null);
@@ -57,9 +58,12 @@ function OrderPage() {
           `메시지: ${data.message}`
       );
       navigate("/");
-    } catch (error) {
-      if (error.response?.status === 401) {
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError;
+
+      if (axiosError.response?.status === 401) {
         navigate("/login");
+        return;
       }
     }
   };
