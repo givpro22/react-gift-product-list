@@ -1,4 +1,5 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { whiteSectionStyle } from "@/styles/CommonStyles";
 import {
   titleStyle,
@@ -15,16 +16,24 @@ import { fetchProductSummary, type ProductSummary } from "@/api/products";
 
 function ProductInfoSection() {
   const { productId } = useParams();
+  const navigate = useNavigate();
   const [product, setProduct] = useState<ProductSummary | null>(null);
 
   const { setProductPrice, setProductName } = useOrder();
 
   useEffect(() => {
     if (!productId) return;
-    fetchProductSummary(productId).then((data) => {
-      setProduct(data);
-    });
-  }, [productId]);
+    const fetchData = async () => {
+      try {
+        const data = await fetchProductSummary(productId);
+        setProduct(data);
+      } catch {
+        toast.error("상품 정보를 불러오지 못했습니다.");
+        navigate("/");
+      }
+    };
+    fetchData();
+  }, [productId, navigate]);
 
   useEffect(() => {
     if (product) {
