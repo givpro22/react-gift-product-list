@@ -6,7 +6,7 @@ export default function useLoginFormValidation() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const auth = useAuth();
+  const { login } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,7 +17,7 @@ export default function useLoginFormValidation() {
 
   const handleLogin = () => {
     const from = location.state?.from || "/";
-    auth.login(email);
+    login(email, password);
     navigate(from, { replace: true });
   };
 

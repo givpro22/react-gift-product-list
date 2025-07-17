@@ -1,3 +1,4 @@
+import { loginApi } from "@/api/auth";
 import {
   createContext,
   useContext,
@@ -8,32 +9,39 @@ import {
 import type { ReactNode } from "react";
 
 type AuthContextType = {
-  user: string | null;
-  username: string | null;
-  login: (username: string) => void;
+  user: userInfoType | null;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => void;
+};
+
+type userInfoType = {
+  authToken: string;
+  email: string;
+  name: string;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<string | null>(() => {
-    return sessionStorage.getItem("user");
+  const [user, setUser] = useState<userInfoType | null>(() => {
+    const stored = sessionStorage.getItem("userInfo");
+    return stored ? JSON.parse(stored) : null;
   });
 
-  const login = useCallback((username: string) => {
-    sessionStorage.setItem("user", username);
-    setUser(username);
+  const login = useCallback(async (email: string, password: string) => {
+    const result = await loginApi(email, password);
+
+    sessionStorage.setItem("userInfo", JSON.stringify(result));
+    setUser(result);
   }, []);
 
   const logout = useCallback(() => {
-    sessionStorage.removeItem("user");
+    sessionStorage.removeItem("userInfo");
     setUser(null);
   }, []);
 
   const value = useMemo(() => {
-    const username = user ? user.split("@")[0] : null;
-    return { user, username, login, logout };
+    return { user, login, logout };
   }, [user, login, logout]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

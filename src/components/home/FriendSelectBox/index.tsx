@@ -4,7 +4,7 @@ import { boxStyle, plusIconStyle, textStyle } from "./styles";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function FriendSelectBox() {
-  const { username } = useAuth();
+  const { user } = useAuth();
   const theme = useTheme();
   return (
     <div css={boxStyle(theme)}>
@@ -12,8 +12,8 @@ export default function FriendSelectBox() {
         <FiPlus />
       </div>
       <span css={textStyle(theme)}>
-        {username
-          ? `${username}님! 선물할 친구를 선택해 주세요.`
+        {user
+          ? `${user.name}님! 선물할 친구를 선택해 주세요.`
           : "선물할 친구를 선택해 주세요."}
       </span>
     </div>
