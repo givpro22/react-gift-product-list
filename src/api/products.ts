@@ -51,3 +51,18 @@ export async function fetchRankingProducts({
 
   return response.data?.data || [];
 }
+
+export interface ProductSummary {
+  id: number;
+  name: string;
+  brandName: string;
+  price: number;
+  imageURL: string;
+}
+
+export async function fetchProductSummary(
+  productId: string
+): Promise<ProductSummary> {
+  const response = await apiClient.get(`/api/products/${productId}/summary`);
+  return response.data.data;
+}

@@ -1,5 +1,4 @@
 import { useParams } from "react-router-dom";
-import { mockProduct } from "@/mocks/productData";
 import { whiteSectionStyle } from "@/styles/CommonStyles";
 import {
   titleStyle,
@@ -10,18 +9,26 @@ import {
   priceStyle,
   priceValueStyle,
 } from "./styles";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useOrder } from "@/contexts/OrderContext";
+import { fetchProductSummary, type ProductSummary } from "@/api/products";
 
 function ProductInfoSection() {
   const { productId } = useParams();
-  const product = mockProduct.find((p) => String(p.id) === productId);
+  const [product, setProduct] = useState<ProductSummary | null>(null);
 
   const { setProductPrice, setProductName } = useOrder();
 
   useEffect(() => {
+    if (!productId) return;
+    fetchProductSummary(productId).then((data) => {
+      setProduct(data);
+    });
+  }, [productId]);
+
+  useEffect(() => {
     if (product) {
-      setProductPrice(product.price.sellingPrice);
+      setProductPrice(product.price);
       setProductName(product.name);
     }
   }, [product, setProductName, setProductPrice]);
@@ -35,11 +42,11 @@ function ProductInfoSection() {
         <img src={product.imageURL} alt={product.name} css={imageStyle} />
         <div>
           <div css={nameStyle}>{product.name}</div>
-          <div css={brandStyle}>{product.brandInfo.name}</div>
+          <div css={brandStyle}>{product.brandName}</div>
           <div css={priceStyle}>
             상품가{" "}
             <span css={priceValueStyle}>
-              {product.price.sellingPrice.toLocaleString()}원
+              {product.price.toLocaleString()}원
             </span>
           </div>
         </div>
