@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { toast } from "react-toastify";
 import { buttonStyle } from "./style.ts";
 import EmailInput from "./EmailInput/index.tsx";
 import PasswordInput from "./PasswordInput/index.tsx";
@@ -13,7 +15,14 @@ export default function LoginForm() {
     setEmail,
     password,
     setPassword,
+    error,
   } = useLoginFormValidation();
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+  }, [error]);
 
   return (
     <>

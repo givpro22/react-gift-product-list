@@ -1,6 +1,5 @@
 import { cardData } from "@/mocks/orderCardData";
 import { whiteSectionStyle } from "@/styles/CommonStyles";
-import { useState } from "react";
 import {
   cardListStyle,
   infoTextStyle,
@@ -15,9 +14,12 @@ const GiftMessageSection = ({
   register,
   errors,
   setValue,
+  selectedCardId,
+  setSelectedCardId,
 }: GiftMessageSectionProps) => {
-  const [selectedCardId, setSelectedCardId] = useState(cardData[0].id);
-  const selectedCard = cardData.find((card) => card.id === selectedCardId);
+  const selectedCard = cardData.find(
+    (card) => card.id === Number(selectedCardId)
+  );
 
   return (
     <div css={whiteSectionStyle()}>
@@ -28,10 +30,10 @@ const GiftMessageSection = ({
             src={card.thumbUrl}
             alt="card thumbnail"
             onClick={() => {
-              setSelectedCardId(card.id);
+              setSelectedCardId(String(card.id));
               setValue("message", card.defaultTextMessage);
             }}
-            css={cardThumbnailStyle(card.id === selectedCardId)}
+            css={cardThumbnailStyle(card.id === Number(selectedCardId))}
           />
         ))}
       </div>

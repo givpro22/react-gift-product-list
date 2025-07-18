@@ -8,12 +8,12 @@ import {
   nameStyle,
 } from "./styles";
 import { whiteSectionStyle } from "@/styles/CommonStyles";
-import { fetchThemes, type ThemProp } from "@/api/themes";
+import { fetchThemes, type ThemeType } from "@/api/themes";
 import LoadingPage from "@/pages/LoadingPage";
 
 export default function CategorySection() {
   const theme = useTheme();
-  const [themes, setThemes] = useState<ThemProp[]>([]);
+  const [themes, setThemes] = useState<ThemeType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

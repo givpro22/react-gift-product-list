@@ -20,6 +20,8 @@ export type GiftMessageSectionProps = {
   register: UseFormRegister<FormValues>;
   errors: FieldErrors<FormValues>;
   setValue: UseFormSetValue<FormValues>;
+  selectedCardId: string;
+  setSelectedCardId: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export type SenderSectionProps = {
