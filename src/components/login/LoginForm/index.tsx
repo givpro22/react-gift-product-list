@@ -15,14 +15,14 @@ export default function LoginForm() {
     setEmail,
     password,
     setPassword,
-    error,
+    errorMessage,
   } = useLoginFormValidation();
 
   useEffect(() => {
-    if (error) {
-      toast.error(error);
+    if (errorMessage) {
+      toast.error(errorMessage);
     }
-  }, [error]);
+  }, [errorMessage]);
 
   return (
     <>

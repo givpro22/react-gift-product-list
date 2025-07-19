@@ -14,7 +14,7 @@ export interface OrderRequest {
   receivers: Receiver[];
 }
 
-export async function createOrderApi(
+export async function fetchOrderApi(
   order: OrderRequest
 ): Promise<{ success: boolean }> {
   const response = await apiClient.post("/api/order", order);

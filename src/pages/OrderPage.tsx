@@ -12,7 +12,7 @@ import { useOrder } from "@/contexts/OrderContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { cardData } from "@/mocks/orderCardData";
 import type { AxiosError } from "axios";
-import { createOrderApi } from "@/api/order";
+import { fetchOrderApi } from "@/api/order";
 
 function OrderPage() {
   const formRef = useRef<HTMLFormElement>(null);
@@ -39,7 +39,7 @@ function OrderPage() {
   } = methods;
   const onSubmit = async (data: FormValues) => {
     try {
-      await createOrderApi({
+      await fetchOrderApi({
         productId: Number(params.productId),
         message: data.message,
         messageCardId: selectedCardId,

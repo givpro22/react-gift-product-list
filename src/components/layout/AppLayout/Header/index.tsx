@@ -6,7 +6,6 @@ import { useAuth } from "@/contexts/AuthContext";
 export default function Header() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  console.log("Header user:", user);
   const handleClickBackButton = () => {
     if (window.history.length > 1) {
       navigate(-1);

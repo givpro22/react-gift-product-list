@@ -1,4 +1,4 @@
-import { loginApi } from "@/api/auth";
+import { fetchLoginApi } from "@/api/auth";
 import {
   createContext,
   useContext,
@@ -29,7 +29,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
 
   const login = useCallback(async (email: string, password: string) => {
-    const result = await loginApi(email, password);
+    const result = await fetchLoginApi(email, password);
 
     sessionStorage.setItem("userInfo", JSON.stringify(result));
     setUser(result);
