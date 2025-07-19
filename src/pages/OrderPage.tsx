@@ -10,9 +10,9 @@ import { useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useOrder } from "@/contexts/OrderContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { createOrder } from "@/api/order";
 import { cardData } from "@/mocks/orderCardData";
 import type { AxiosError } from "axios";
+import { createOrderApi } from "@/api/order";
 
 function OrderPage() {
   const formRef = useRef<HTMLFormElement>(null);
@@ -39,7 +39,7 @@ function OrderPage() {
   } = methods;
   const onSubmit = async (data: FormValues) => {
     try {
-      await createOrder({
+      await createOrderApi({
         productId: Number(params.productId),
         message: data.message,
         messageCardId: selectedCardId,
