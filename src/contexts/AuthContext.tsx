@@ -1,4 +1,4 @@
-import { fetchLoginApi } from "@/api/auth";
+import { fetchLoginApi, type UserInfo } from "@/api/auth";
 import {
   createContext,
   useContext,
@@ -9,30 +9,30 @@ import {
 import type { ReactNode } from "react";
 
 type AuthContextType = {
-  user: userInfoType | null;
+  user: UserInfo | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
-};
-
-type userInfoType = {
-  authToken: string;
-  email: string;
-  name: string;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<userInfoType | null>(() => {
+  const [user, setUser] = useState<UserInfo | null>(() => {
     const stored = sessionStorage.getItem("userInfo");
     return stored ? JSON.parse(stored) : null;
   });
+  const [loginError, setLoginError] = useState(false);
 
   const login = useCallback(async (email: string, password: string) => {
-    const result = await fetchLoginApi(email, password);
-
-    sessionStorage.setItem("userInfo", JSON.stringify(result));
-    setUser(result);
+    try {
+      const result = await fetchLoginApi(email, password);
+      sessionStorage.setItem("userInfo", JSON.stringify(result));
+      setUser(result);
+      setLoginError(false);
+    } catch (error) {
+      setLoginError(true);
+      throw error;
+    }
   }, []);
 
   const logout = useCallback(() => {
@@ -41,8 +41,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const value = useMemo(() => {
-    return { user, login, logout };
-  }, [user, login, logout]);
+    return { user, login, logout, loginError };
+  }, [user, login, logout, loginError]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
