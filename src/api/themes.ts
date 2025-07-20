@@ -28,7 +28,7 @@ export interface ThemeProductResponse {
   hasMoreList: boolean;
 }
 
-export interface ThemeProductInfo {
+export interface ThemeInfo {
   themeId: number;
   name: string;
   title: string;
@@ -43,14 +43,12 @@ export async function fetchThemes(): Promise<ThemeType[]> {
 
 export async function fetchThemeProducts(
   themeId: string
-): Promise<ThemeProductResponse[]> {
+): Promise<ThemeProductResponse> {
   const response = await apiClient.get(`/api/themes/${themeId}/products`);
   return response.data.data;
 }
 
-export async function fetchThemeInfo(
-  themeId: string
-): Promise<ThemeProductInfo> {
+export async function fetchThemeInfo(themeId: string): Promise<ThemeInfo> {
   const response = await apiClient.get(`/api/themes/${themeId}/info`);
   return response.data.data;
 }

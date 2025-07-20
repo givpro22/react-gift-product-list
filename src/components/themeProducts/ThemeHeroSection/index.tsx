@@ -1,20 +1,22 @@
-import { fetchThemeInfo, type ThemeProductInfo } from "@/api/themes";
+import { fetchThemeInfo, type ThemeInfo } from "@/api/themes";
 import LoadingPage from "@/pages/LoadingPage";
 import { whiteSectionStyle } from "@/styles/CommonStyles";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   sectionStyle,
   nameStyle,
   titleStyle,
   descriptionStyle,
 } from "./styles";
+import type { AxiosError } from "axios";
 
 function ThemeHeroSection() {
   const { themeId } = useParams<{ themeId: string }>();
-  const [themes, setThemes] = useState<ThemeProductInfo | null>(null);
+  const [themesInfo, setThemesInfo] = useState<ThemeInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!themeId) return;
@@ -22,23 +24,28 @@ function ThemeHeroSection() {
     const loadThemeHeroData = async () => {
       try {
         const data = await fetchThemeInfo(themeId);
-        setThemes(data);
-      } catch {
-        setError("테마 정보를 불러오는 데 실패했습니다.");
+        setThemesInfo(data);
+      } catch (error: unknown) {
+        const axiosError = error as AxiosError;
+        if (axiosError.response?.status === 404) {
+          navigate("/home");
+        } else {
+          setError("테마 상품 정보를 불러오는 데 실패했습니다.");
+        }
       }
       setLoading(false);
     };
     loadThemeHeroData();
-  }, []);
-  if (!themes) return null;
+  }, [themeId, navigate]);
+  if (!themesInfo) return null;
   if (loading) return <LoadingPage css={whiteSectionStyle()} />;
   if (error) return null;
 
   return (
-    <section css={sectionStyle(themes.backgroundColor)}>
-      <p css={nameStyle}>{themes.name}</p>
-      <h2 css={titleStyle}>{themes.title}</h2>
-      <p css={descriptionStyle}>{themes.description}</p>
+    <section css={sectionStyle(themesInfo.backgroundColor)}>
+      <p css={nameStyle}>{themesInfo.name}</p>
+      <h2 css={titleStyle}>{themesInfo.title}</h2>
+      <p css={descriptionStyle}>{themesInfo.description}</p>
     </section>
   );
 }
