@@ -42,14 +42,14 @@ export async function fetchThemes(): Promise<ThemeType[]> {
 }
 
 export async function fetchThemeProducts(
-  themeId: number
+  themeId: string
 ): Promise<ThemeProductResponse[]> {
   const response = await apiClient.get(`/api/themes/${themeId}/products`);
   return response.data.data;
 }
 
 export async function fetchThemeInfo(
-  themeId: number
+  themeId: string
 ): Promise<ThemeProductInfo> {
   const response = await apiClient.get(`/api/themes/${themeId}/info`);
   return response.data.data;

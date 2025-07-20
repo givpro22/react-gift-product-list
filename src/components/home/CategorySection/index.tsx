@@ -22,11 +22,11 @@ export default function CategorySection() {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  const handleItemClick = (id: number) => {
+  const handleItemClick = (themeId: number) => {
     if (user) {
-      navigate(`/themes/${id}`);
+      navigate(`/themes/${themeId}`);
     } else {
-      navigate("/login", { state: { from: `/themes/${id}` } });
+      navigate("/login", { state: { from: `/themes/${themeId}` } });
     }
   };
 
