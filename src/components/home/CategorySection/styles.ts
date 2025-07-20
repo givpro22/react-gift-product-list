@@ -20,6 +20,9 @@ export const itemStyle = css`
   flex-direction: column;
   align-items: center;
   text-align: center;
+  cursor: pointer;
+  border-radius: 12px;
+  overflow: hidden;
 `;
 
 export const imageStyle = css`
@@ -27,6 +30,7 @@ export const imageStyle = css`
   height: 56px;
   object-fit: cover;
   margin-bottom: 8px;
+  border-radius: 12px;
 `;
 
 export const nameStyle = (theme: Theme) => css`
