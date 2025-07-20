@@ -6,12 +6,15 @@ import LogoutPage from "@/pages/LogoutPage";
 import OrderPage from "@/pages/OrderPage";
 import AppLayout from "@/components/layout/AppLayout";
 import RequireAuth from "@/components/auth/RequireAuth";
+import ThemeProductsPage from "@/pages/ThemeProductsPage";
 
 const ROUTES = {
   ROOT: "/",
   LOGIN: "/login",
   MYPAGE: "/my",
   ORDER: "/order/:productId",
+  PRODCUT: "/themes/:themeId",
+  NOT_FOUND: "*",
 };
 
 export default function Router() {
@@ -30,7 +33,8 @@ export default function Router() {
             }
           />
           <Route path={ROUTES.ORDER} element={<OrderPage />} />
-          <Route path="*" element={<NotFoundPage />} />
+          <Route path={ROUTES.PRODCUT} element={<ThemeProductsPage />} />
+          <Route path={ROUTES.NOT_FOUND} element={<NotFoundPage />} />
         </Routes>
       </AppLayout>
     </BrowserRouter>

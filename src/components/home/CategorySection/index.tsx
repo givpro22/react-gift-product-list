@@ -10,12 +10,25 @@ import {
 import { whiteSectionStyle } from "@/styles/CommonStyles";
 import { fetchThemes, type ThemeType } from "@/api/themes";
 import LoadingPage from "@/pages/LoadingPage";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function CategorySection() {
   const theme = useTheme();
   const [themes, setThemes] = useState<ThemeType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const handleItemClick = (id: number) => {
+    if (user) {
+      navigate(`/themes/${id}`);
+    } else {
+      navigate("/login", { state: { from: `/themes/${id}` } });
+    }
+  };
 
   useEffect(() => {
     const loadThemes = async () => {
@@ -39,7 +52,11 @@ export default function CategorySection() {
       <h2 css={titleStyle(theme)}>선물 테마</h2>
       <div css={gridStyle}>
         {themes.map((item) => (
-          <div key={item.themeId} css={itemStyle}>
+          <div
+            key={item.themeId}
+            css={itemStyle}
+            onClick={() => handleItemClick(item.themeId)}
+          >
             <img src={item.image} alt={item.name} css={imageStyle} />
             <span css={nameStyle(theme)}>{item.name}</span>
           </div>
