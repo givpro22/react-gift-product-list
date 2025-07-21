@@ -14,15 +14,9 @@ export interface OrderRequest {
   receivers: Receiver[];
 }
 
-export async function createOrder(
+export async function fetchOrderApi(
   order: OrderRequest
 ): Promise<{ success: boolean }> {
-  const userInfo = JSON.parse(sessionStorage.getItem("userInfo") || "{}");
-  const token = userInfo.authToken;
-  const response = await apiClient.post("/api/order", order, {
-    headers: {
-      Authorization: `${token}`,
-    },
-  });
+  const response = await apiClient.post("/api/order", order);
   return response.data.data;
 }

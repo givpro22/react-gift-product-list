@@ -4,13 +4,15 @@ import type { Theme } from "@emotion/react";
 export const boxStyle = (theme: Theme) => css`
   display: flex;
   align-items: center;
-  background-color: ${theme.colors.semantic.kakaoYellow};
+  background-color: ${theme.colors.semantic.backgroundDefault};
   border-radius: 12px;
   padding: ${theme.spacing.spacing4};
+  margin-left: ${theme.spacing.spacing3};
+  margin-right: ${theme.spacing.spacing3};
 `;
 
 export const plusIconStyle = (theme: Theme) => css`
-  background-color: ${theme.colors.gray.gray00};
+  background-color: ${theme.colors.semantic.kakaoYellow};
   color: ${theme.colors.gray.gray1000};
   border-radius: 50%;
   width: 28px;

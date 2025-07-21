@@ -30,11 +30,9 @@ export const rankStyle = (theme: Theme) => css`
 `;
 
 export const imageStyle = css`
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
+  width: 100%;
+  height: 100%;
   margin-bottom: 6px;
-  border-radius: 50%;
 `;
 
 export const nameStyle = (theme: Theme) => css`

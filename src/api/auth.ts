@@ -1,12 +1,14 @@
 import { apiClient } from "./client";
 
-export async function loginApi(
-  email: string,
-  password: string
-): Promise<{ authToken: string; email: string; name: string }> {
-  const response = await apiClient.post("/api/login", { email, password });
-  return response.data.data;
+export interface UserInfo {
+  authToken: string;
+  email: string;
+  name: string;
 }
-export async function logoutApi(): Promise<void> {
-  await apiClient.post("/logout");
+export async function fetchLoginApi(email: string, password: string) {
+  const response = await apiClient.post<{ data: UserInfo }>("/api/login", {
+    email,
+    password,
+  });
+  return response.data.data;
 }
