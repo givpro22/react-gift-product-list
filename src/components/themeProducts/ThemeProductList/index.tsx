@@ -1,5 +1,5 @@
-import { fetchThemeProducts, type ThemeProductResponse } from "@/api/themes";
-import { useEffect, useState } from "react";
+import { fetchThemeProducts, type ThemeProduct } from "@/api/themes";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   sectionStyle,
@@ -10,35 +10,56 @@ import {
   nameStyle,
   priceStyle,
 } from "./styles";
+import NotFoundPage from "@/pages/NotFoundPage";
 
 function ThemeProductList() {
   const { themeId } = useParams<{ themeId: string }>();
-  const [themes, setThemes] = useState<ThemeProductResponse | null>(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [products, setProducts] = useState<ThemeProduct[]>([]);
+  const [cursor, setCursor] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const [isFetching, setIsFetching] = useState(false);
+  const observerRef = useRef<HTMLDivElement | null>(null);
+  const loadMoreProducts = useCallback(async () => {
+    if (!themeId || !hasMore || isFetching) return;
+
+    setIsFetching(true);
+    try {
+      const data = await fetchThemeProducts(themeId, cursor);
+      setProducts((prev) => {
+        const existingIds = new Set(prev.map((item) => item.id));
+        const newItems = data.list.filter((item) => !existingIds.has(item.id));
+        return [...prev, ...newItems];
+      });
+      setCursor(data.cursor);
+      setHasMore(data.hasMoreList);
+    } catch {
+      setError("테마제품 정보를 불러오는 데 실패했습니다.");
+    } finally {
+      setIsFetching(false);
+    }
+  }, [themeId, hasMore, isFetching, cursor]);
 
   useEffect(() => {
-    if (!themeId) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && hasMore) {
+          loadMoreProducts();
+        }
+      },
+      { threshold: 1.0 }
+    );
 
-    const loadThemeProductoData = async () => {
-      try {
-        const data = await fetchThemeProducts(themeId);
-        setThemes(data);
-      } catch {
-        setError("테마제품 정보를 불러오는 데 실패했습니다.");
-      }
-      setLoading(false);
+    const currentElement = observerRef.current;
+    if (currentElement) observer.observe(currentElement);
+    return () => {
+      if (currentElement) observer.unobserve(currentElement);
     };
-    loadThemeProductoData();
-  }, [themeId]);
+  }, [hasMore, loadMoreProducts]);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
-  if (!themes || !themes.list || themes.list.length === 0)
-    return <div>상품이 없습니다.</div>;
-
-  const products = themes.list;
-
+  if (error) {
+    return <NotFoundPage />;
+  }
   return (
     <section css={sectionStyle}>
       <div css={gridStyle}>
@@ -53,6 +74,7 @@ function ThemeProductList() {
           </div>
         ))}
       </div>
+      {hasMore && <div ref={observerRef} style={{ height: 1 }} />}
     </section>
   );
 }
